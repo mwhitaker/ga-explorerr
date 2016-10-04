@@ -18,15 +18,13 @@ Load and source function and load required libraries:
 
 ```{r}
 library(tidyverse)
-library(stringr)
-library(lubridate)
 library(httr)
 
 ga_explorer <- function() {
   results <- httr::GET(ga_url)
   httr::stop_for_status(results)
   res <- httr::content(results)
-  colheaders <- purrr::map_chr(res$columnHeaders, "name") %>% stringr::str_replace("ga:","")
+  colheaders <- purrr::map_chr(res$columnHeaders, "name") %>% sub("ga:","",.)
   coltypes <- purrr::map_chr(res$columnHeaders, "dataType")
   res <- purrr::map(res$rows, ~ purrr::set_names(.x, colheaders )) %>% dplyr::bind_rows()
   dataType <- function(x, type) {
@@ -38,13 +36,13 @@ ga_explorer <- function() {
   }
   res <- purrr::map2_df(res, coltypes, dataType)
   if(!is.null(res[["date"]])) {
-    res[["date"]] <- lubridate::ymd(res[["date"]])
+    res[["date"]] <- as.Date(res[["date"]], format = "%Y%m%d")
   }
   res
 }
 ```
 
-The above function will use  `ga_url` and give you back a nice and tidy `tibble` and set the column types automatically.
+The above function will use  `ga_url` and give you back a nice and tidy `tibble` with column types set automatically for you.
 
 ```{r}
 my_data <- ga_explorer()
