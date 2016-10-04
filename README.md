@@ -1,14 +1,14 @@
 # ga-explorerr
 
-Super simple way to get the data from the GA Query Explorer directly into R.
+Super simple way to get the data from the Google Analytics Query Explorer directly into an R data frame. No need for external Google Analytics packages, just uses hadleyverse packages that you probably already use. For anything more beefy I recommend [googleAnalyticsR](https://github.com/MarkEdmondson1234/googleAnalyticsR).
 
 1) Build and run the query at the [Query Explorer](https://ga-dev-tools.appspot.com/query-explorer/)
 
-2) Copy the **API QUERY URI**, making sure the `access token` is included:
+2) Copy the **API Query URI**, making sure the `access token` is included:
 
 ![GA Explorer](R/ga_explorer.png)
 
-3) Load and source function and load required libraries:
+3) Load a couple of required libraries and source function:
 
 ```{r}
 library(tidyverse)
