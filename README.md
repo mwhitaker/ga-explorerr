@@ -2,7 +2,7 @@
 
 Super simple way to get the data from the GA Query Explorer directly into R.
 
-1) Run the query at the [Query Explorer](https://ga-dev-tools.appspot.com/query-explorer/)
+1) Build and run the query at the [Query Explorer](https://ga-dev-tools.appspot.com/query-explorer/)
 
 2) Copy the **API QUERY URI**, making sure the `access token` is included:
 
@@ -44,7 +44,7 @@ ga_explorer <- function() {
 }
 ```
 
-The above function will call the GA API and give you back a nice tidy `tibble` and set the column types automatically.
+The above function will use  `ga_url` and give you back a nice and tidy `tibble` and set the column types automatically.
 
 ```{r}
 my_data <- ga_explorer()
