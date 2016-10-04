@@ -1,5 +1,50 @@
 # ga-explorerr
 
-Super simple way to get the data from the GA Explorer directly into R.
+Super simple way to get the data from the GA Query Explorer directly into R.
 
-    ga_url <- "https://www.googleapis.com/analytics/v3/data/ga?ids=ga%3A**123456789**&start-date=2016-09-01&end-date=2016-09-25&metrics=ga%3AuniqueEvents&dimensions=ga%3Adate%2Cga%3ApagePath%2Cga%3AeventCategory%2Cga%3AeventAction&filters=ga%3ApagePath%3D~wasgij-original-25&max-results=10000&access_token=**ya29....**"
+1) Run the query at the [Query Explorer](https://ga-dev-tools.appspot.com/query-explorer/)
+2) Copy the **API QUERY URI**, making sure the `access token` is included:
+
+![GA Explorer](R/ga_explorer.png)
+
+3) Paste URI into an R variable:
+
+```{r}
+ga_url <- "https://www.googleapis.com/analytics/v3/data/ga?ids=ga%3A123456789..."
+```
+
+Load and source function and load required libraries:
+
+```{r}
+library(tidyverse)
+library(stringr)
+library(lubridate)
+library(httr)
+
+ga_explorer <- function() {
+  results <- httr::GET(ga_url)
+  httr::stop_for_status(results)
+  res <- httr::content(results)
+  colheaders <- purrr::map_chr(res$columnHeaders, "name") %>% stringr::str_replace("ga:","")
+  coltypes <- purrr::map_chr(res$columnHeaders, "dataType")
+  res <- purrr::map(res$rows, ~ purrr::set_names(.x, colheaders )) %>% dplyr::bind_rows()
+  dataType <- function(x, type) {
+    switch(type,
+         INTEGER = as.integer(x),
+         STRING = as.character(x),
+         CURRENCY = as.numeric(x),
+         PERCENT = as.numeric(x))
+  }
+  res <- purrr::map2_df(res, coltypes, dataType)
+  if(!is.null(res[["date"]])) {
+    res[["date"]] <- lubridate::ymd(res[["date"]])
+  }
+  res
+}
+```
+
+The above function will call the GA API and give you back a nice tidy `tibble` and set the column types automatically.
+
+```{r}
+my_data <- ga_explorer()
+```
