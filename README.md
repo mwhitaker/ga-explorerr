@@ -3,6 +3,7 @@
 Super simple way to get the data from the GA Query Explorer directly into R.
 
 1) Run the query at the [Query Explorer](https://ga-dev-tools.appspot.com/query-explorer/)
+
 2) Copy the **API QUERY URI**, making sure the `access token` is included:
 
 ![GA Explorer](R/ga_explorer.png)
