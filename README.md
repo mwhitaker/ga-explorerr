@@ -14,7 +14,7 @@ Super simple way to get the data from the GA Query Explorer directly into R.
 library(tidyverse)
 library(httr)
 
-ga_explorer <- function() {
+ga_explorer <- function(ga_url) {
   results <- httr::GET(ga_url)
   httr::stop_for_status(results)
   res <- httr::content(results)
