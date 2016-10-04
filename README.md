@@ -8,13 +8,7 @@ Super simple way to get the data from the GA Query Explorer directly into R.
 
 ![GA Explorer](R/ga_explorer.png)
 
-3) Paste URI into an R variable:
-
-```{r}
-ga_url <- "https://www.googleapis.com/analytics/v3/data/ga?ids=ga%3A123456789..."
-```
-
-Load and source function and load required libraries:
+3) Load and source function and load required libraries:
 
 ```{r}
 library(tidyverse)
@@ -42,8 +36,8 @@ ga_explorer <- function() {
 }
 ```
 
-The above function will use  `ga_url` and give you back a nice and tidy `tibble` with column types set automatically for you.
+4) Call the function `ga_explorer(ga_url)` and paste in the URI as the argument. You'll get a nicely formatted `tibble` back with all columns having the right format.
 
 ```{r}
-my_data <- ga_explorer()
+my_data <- ga_explorer("https://www.googleapis.com/analytics/v3/data/ga?ids=ga%3A123456789...")
 ```
